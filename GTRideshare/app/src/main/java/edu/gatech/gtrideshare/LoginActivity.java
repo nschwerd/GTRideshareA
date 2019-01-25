@@ -148,6 +148,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 Toast.LENGTH_SHORT).show();
                         //finish();
                         //TODO: Bring user to profile? page
+                        Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        startActivity(profileIntent);
                         //LoginActivity.this.startActivity(new Intent());
                     } else {
                         // If sign in fails, display a message to the user.

@@ -39,6 +39,7 @@
                     android:id="@+id/register_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_person_black_24dp"
                     android:hint="@string/prompt_name"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
@@ -54,6 +55,7 @@
                     android:id="@+id/register_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_email_black_24dp"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
@@ -69,6 +71,7 @@
                     android:id="@+id/register_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_lock_black_24dp"
                     android:hint="@string/prompt_password"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
@@ -94,7 +97,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:background="@null"
                 android:text="@string/already_registered"
+                android:textColor="@color/design_default_color_primary"
                 android:textStyle="bold" />
 
         </LinearLayout>
