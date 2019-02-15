@@ -3,6 +3,7 @@ package edu.gatech.gtrideshare;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -61,18 +62,64 @@ public class InDepthRegistrationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 Map<String, Object> user = new HashMap<>();
-                user.put("location", 0);
-                user.put("name", fullName.getText().toString());
-                user.put("phone", phoneNumber.getText().toString());
-                user.put("schedule", 0);
-                user.put("seats", numSeats.getSelectedItem());
-                user.put("willingToDrive", willingToDrive.isChecked());
 
-                db.collection("users").add(user);
+                boolean cancel = false;
+                View focus = null;
+                fullName.setError(null);
+                phoneNumber.setError(null);
 
-                Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-                startActivity(profileIntent);
+                if (TextUtils.isEmpty(fullName.getText())) {
+                    fullName.setError("Must enter name");
+                    focus = fullName;
+                    cancel = true;
+                }else if (TextUtils.isEmpty(phoneNumber.getText())) {
+                    phoneNumber.setError("Must enter phone number");
+                    focus = phoneNumber;
+                    cancel = true;
+                }
+
+                if (cancel) {
+                    focus.requestFocus();
+                } else {
+                    user.put("location", 0);
+                    user.put("name", fullName.getText().toString());
+                    user.put("phone", phoneNumber.getText().toString());
+
+                    HashMap<String, String> schedule = getSchedule();
+
+                    user.put("schedule", schedule);
+                    user.put("seats", numSeats.getSelectedItem());
+                    user.put("willingToDrive", willingToDrive.isChecked());
+
+                    db.collection("users").add(user);
+
+                    Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(profileIntent);
+                }
+
             }
         });
     }
+
+    private HashMap<String, String> getSchedule() {
+        HashMap<String, String> schedule = new HashMap<>();
+        String mon = mondayArrival.getSelectedItem().toString()
+                + " - " + mondayDeparture.getSelectedItem().toString();
+        String tues = tuesdayArrival.getSelectedItem().toString()
+                + " - " + tuesdayDeparture.getSelectedItem().toString();
+        String wed = wednesdayArrival.getSelectedItem().toString()
+                + " - " + wednesdayDeparture.getSelectedItem().toString();
+        String thurs = thursdayArrival.getSelectedItem().toString()
+                + " - " + thursdayDeparture.getSelectedItem().toString();
+        String fri = fridayArrival.getSelectedItem().toString()
+                + " - " + fridayDeparture.getSelectedItem().toString();
+
+        schedule.put("monday", mon);
+        schedule.put("tuesday", tues);
+        schedule.put("wednesday", wed);
+        schedule.put("thursday", thurs);
+        schedule.put("friday", fri);
+        return schedule;
+    }
+
 }
