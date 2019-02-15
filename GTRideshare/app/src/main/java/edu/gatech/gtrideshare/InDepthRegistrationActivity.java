@@ -9,6 +9,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class InDepthRegistrationActivity extends AppCompatActivity {
 
     private Button confirmInfoButton;
@@ -31,15 +36,9 @@ public class InDepthRegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_in_depth_registration);
-        confirmInfoButton = findViewById(R.id.confirmInfoButton);
-        confirmInfoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-                startActivity(profileIntent);
-            }
-        });
+
         mondayArrival = findViewById(R.id.mondayArrival);
         mondayDeparture = findViewById(R.id.mondayDeparture);
         tuesdayArrival = findViewById(R.id.tuesdayArrival);
@@ -55,5 +54,25 @@ public class InDepthRegistrationActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.phoneNumber);
         willingToDrive = findViewById(R.id.willingToDrive);
         numSeats = findViewById(R.id.numSeats);
+
+        confirmInfoButton = findViewById(R.id.confirmInfoButton);
+        confirmInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                Map<String, Object> user = new HashMap<>();
+                user.put("location", 0);
+                user.put("name", fullName.getText().toString());
+                user.put("phone", phoneNumber.getText().toString());
+                user.put("schedule", 0);
+                user.put("seats", numSeats.getSelectedItem());
+                user.put("willingToDrive", willingToDrive.isChecked());
+
+                db.collection("users").add(user);
+
+                Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                startActivity(profileIntent);
+            }
+        });
     }
 }
