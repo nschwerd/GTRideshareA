@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 public class InDepthRegistrationActivity extends AppCompatActivity {
@@ -20,6 +22,11 @@ public class InDepthRegistrationActivity extends AppCompatActivity {
     private Spinner thursdayDeparture;
     private Spinner fridayArrival;
     private Spinner fridayDeparture;
+
+    private EditText fullName;
+    private EditText phoneNumber;
+    private CheckBox willingToDrive;
+    private Spinner numSeats;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,5 +51,9 @@ public class InDepthRegistrationActivity extends AppCompatActivity {
         fridayArrival = findViewById(R.id.fridayArrival);
         fridayDeparture = findViewById(R.id.fridayDeparture);
 
+        fullName = findViewById(R.id.fullName);
+        phoneNumber = findViewById(R.id.phoneNumber);
+        willingToDrive = findViewById(R.id.willingToDrive);
+        numSeats = findViewById(R.id.numSeats);
     }
 }
