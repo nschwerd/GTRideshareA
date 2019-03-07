@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -27,6 +34,9 @@ import java.util.Map;
 public class InDepthRegistrationActivity extends AppCompatActivity {
 
     private static final String TAG = "InDepthRegistrationActivity";
+
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Button confirmInfoButton;
     private Spinner mondayArrival;
@@ -53,6 +63,17 @@ public class InDepthRegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DocumentReference docRef = db.collection("users").document(user.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.getResult().exists()) {
+                    Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(profileIntent);
+                }
+            }
+        });
 
         setContentView(R.layout.activity_in_depth_registration);
 
@@ -93,8 +114,7 @@ public class InDepthRegistrationActivity extends AppCompatActivity {
         confirmInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                Map<String, Object> user = new HashMap<>();
+                Map<String, Object> userinfo = new HashMap<>();
 
                 boolean cancel = false;
                 View focus = null;
@@ -115,19 +135,19 @@ public class InDepthRegistrationActivity extends AppCompatActivity {
                     focus.requestFocus();
                 } else {
                     //Put the location in as a GeoPoint
-                    user.put("location", new GeoPoint(location.getLatitude(), location.getLongitude()));
+                    userinfo.put("location", new GeoPoint(location.getLatitude(), location.getLongitude()));
 
                     //Continue with other info
-                    user.put("name", fullName.getText().toString());
-                    user.put("phone", phoneNumber.getText().toString());
+                    userinfo.put("name", fullName.getText().toString());
+                    userinfo.put("phone", phoneNumber.getText().toString());
 
                     HashMap<String, String> schedule = getSchedule();
 
-                    user.put("schedule", schedule);
-                    user.put("seats", numSeats.getSelectedItem());
-                    user.put("willingToDrive", willingToDrive.isChecked());
+                    userinfo.put("schedule", schedule);
+                    userinfo.put("seats", numSeats.getSelectedItem());
+                    userinfo.put("willingToDrive", willingToDrive.isChecked());
 
-                    db.collection("users").add(user);
+                    db.collection("users").document(user.getUid()).set(userinfo);
 
                     Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(profileIntent);

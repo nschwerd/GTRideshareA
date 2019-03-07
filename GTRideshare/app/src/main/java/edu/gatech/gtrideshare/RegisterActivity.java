@@ -172,8 +172,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email.contains("@") && email.contains("gatech.edu");
     }
 
     private boolean isPasswordValid(String password) {
