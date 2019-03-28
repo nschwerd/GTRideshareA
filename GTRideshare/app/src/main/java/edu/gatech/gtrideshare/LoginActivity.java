@@ -36,6 +36,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +57,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,9 +156,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         //finish();
                         //TODO: Bring user to profile? page
                         //Brings user to in depth register but should only happen for the first time
-                        Intent inDepthRegisterIntent = new Intent(getApplicationContext(), InDepthRegistrationActivity.class);
-                        startActivity(inDepthRegisterIntent);
-                        //LoginActivity.this.startActivity(new Intent());
+
+                        DocumentReference docRef = db.collection("users").document(user.getUid());
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.getResult().exists()) {
+                                    Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                                    startActivity(profileIntent);
+                                } else {
+                                    Intent inDepthRegisterIntent = new Intent(getApplicationContext(), InDepthRegistrationActivity.class);
+                                    startActivity(inDepthRegisterIntent);
+                                }
+                            }
+                        });
+
                     } else {
                         // If sign in fails, display a message to the user.
                         showProgress(false);

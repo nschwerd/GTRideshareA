@@ -64,17 +64,6 @@ public class InDepthRegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DocumentReference docRef = db.collection("users").document(user.getUid());
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.getResult().exists()) {
-                    Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-                    startActivity(profileIntent);
-                }
-            }
-        });
-
         setContentView(R.layout.activity_in_depth_registration);
 
         /* Automatically get the location from the GPS */
