@@ -1,15 +1,21 @@
 package edu.gatech.gtrideshare;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.auth.User;
+
+import java.util.HashMap;
 import java.util.List;
 
 public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyViewHolder> {
-    private List<UserData> mDataset;
+    private static List<UserData> mDataset;
+    private UserData mUser;
+    private static Context context;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -24,12 +30,17 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
             tvName = (TextView) v.findViewById(R.id.listName);
             tvSchedule = (TextView) v.findViewById(R.id.listSchedule);
             tvDistance = (TextView) v.findViewById(R.id.listDistance);
+
         }
     }
 
+    public static List getDataSet() {return mDataset;}
+
     // Constructor for user list
-    public MatchListAdapter(List<UserData> myDataset) {
+    public MatchListAdapter(List<UserData> myDataset, UserData currentUser, Context context) {
         mDataset = myDataset;
+        mUser = currentUser;
+        this.context = context;
     }
 
     // Create new views (invoked by the layout manager)
@@ -43,13 +54,24 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
         holder.tvName.setText(mDataset.get(position).fullname);
-        holder.tvSchedule.setText("schedule match%"); //TODO: make a function that calculates % match
-        holder.tvDistance.setText("distance from you"); //TODO: make a function that calculates distance
+        holder.tvName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CarpoolSearchActivity.gotoMatchProfile(context, position);
+            }
+        });
+
+        String percentMatch = calcSchedulePercentage(position);
+        //TODO complete pinning functionality
+        holder.tvSchedule.setText("schedule match: " + percentMatch + "%");
+        holder.tvDistance.setText("distance from you: " + calcDistanceToMatch(position)); //TODO: make a function that calculates distance
+
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -57,4 +79,29 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
     public int getItemCount() {
         return mDataset.size();
     }
+
+    private String calcSchedulePercentage(int position) {
+        HashMap<String, String> userSchedule = mUser.schedule;
+        HashMap<String, String> matchSchedule = mDataset.get(position).schedule;
+        float matchedTimes = 0;
+        int totalTimes = 10;
+
+        for (String day : userSchedule.keySet()) {
+            String userDay = userSchedule.get(day);
+            String matchDay = matchSchedule.get(day);
+            String[] userTimes = userDay.split("-");
+            String[] matchTimes = matchDay.split("-");
+
+            if (userTimes[0].equals(matchTimes[0])) {matchedTimes++;}
+            if (userTimes[1].equals(matchTimes[1])) {matchedTimes++;}
+        }
+
+        return String.format("%.1f", (matchedTimes / totalTimes * 100));
+    }
+
+    private String calcDistanceToMatch(int position) {
+
+        return "0 miles";
+    }
+
 }

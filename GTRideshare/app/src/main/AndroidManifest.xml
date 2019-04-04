@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CarpoolSearchActivity"></activity>
+        <activity android:name=".MatchProfileActivity"></activity>
+        <activity android:name=".CarpoolSearchActivity" />
         <activity android:name=".InDepthRegistrationActivity" />
         <activity android:name=".ProfileActivity" />
         <activity

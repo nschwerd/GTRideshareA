@@ -60,6 +60,5 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
-        Log.d(TAG, docRef.get().toString());
     }
 }
