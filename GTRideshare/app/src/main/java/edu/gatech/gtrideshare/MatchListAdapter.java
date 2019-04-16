@@ -1,6 +1,7 @@
 package edu.gatech.gtrideshare;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +63,11 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
         holder.tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CarpoolSearchActivity.gotoMatchProfile(context, position);
+                List dataset = MatchListAdapter.getDataSet();
+                UserData match = (UserData) dataset.get(position);
+                Intent matchProfileIntent = new Intent(context, MatchProfileActivity.class);
+                matchProfileIntent.putExtra("matchID", match.id);
+                v.getContext().startActivity(matchProfileIntent);
             }
         });
 

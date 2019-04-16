@@ -81,15 +81,4 @@ public class CarpoolSearchActivity extends AppCompatActivity {
         mAdapter = new MatchListAdapter(users, currentUser, getApplicationContext());
         recyclerView.setAdapter(mAdapter);
     }
-
-
-    public static void gotoMatchProfile(Context context, int matchposition) {
-        List dataset = MatchListAdapter.getDataSet();
-        UserData match = (UserData) dataset.get(matchposition);
-        Intent matchProfileIntent = new Intent(context, MatchProfileActivity.class);
-        matchProfileIntent.putExtra("matchID", match.id);
-        context.startActivity(matchProfileIntent);
-    }
-
-
 }
