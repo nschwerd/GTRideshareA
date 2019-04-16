@@ -2,16 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/border">
 
-    <TextView
-        android:id="@+id/listName"
+    <LinearLayout
         android:layout_width="71dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_height="match_parent"
         android:layout_weight="0.30"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/listName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="188dp"
@@ -22,12 +26,12 @@
         <TextView
             android:id="@+id/listSchedule"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="27dp" />
 
         <TextView
             android:id="@+id/listDistance"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <CheckBox
@@ -35,4 +39,5 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0.30" />
+
 </LinearLayout>
