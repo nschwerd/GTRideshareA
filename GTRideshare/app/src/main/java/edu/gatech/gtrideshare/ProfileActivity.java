@@ -34,6 +34,8 @@ public class ProfileActivity extends AppCompatActivity {
         profileWelcome = findViewById(R.id.profileWelcome);
         carpoolSearch = findViewById(R.id.carpoolSearch);
 
+        //TODO let users edit their information
+
         carpoolSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

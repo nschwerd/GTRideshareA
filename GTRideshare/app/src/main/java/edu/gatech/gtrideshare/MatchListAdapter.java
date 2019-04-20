@@ -2,12 +2,14 @@ package edu.gatech.gtrideshare;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.auth.User;
 
 import java.util.HashMap;
@@ -105,8 +107,28 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
     }
 
     private String calcDistanceToMatch(int position) {
+        GeoPoint userLocation = mUser.location;
+        double userLat = userLocation.getLatitude();
+        double userLng = userLocation.getLongitude();
 
-        return "0 miles";
+        GeoPoint matchLocation = mDataset.get(position).location;
+        double matchLat = matchLocation.getLatitude();
+        double matchLng = matchLocation.getLongitude();
+
+        Location locationUser = new Location("point of the user");
+
+        locationUser.setLatitude(userLat);
+        locationUser.setLongitude(userLng);
+
+        Location locationMatch = new Location("point of the match");
+
+        locationMatch.setLatitude(matchLat);
+        locationMatch.setLongitude(matchLng);
+
+        //distance in meters
+        float distance = locationUser.distanceTo(locationMatch);
+
+        return String.format("%.2f miles", distance / 1609.344);
     }
 
 }

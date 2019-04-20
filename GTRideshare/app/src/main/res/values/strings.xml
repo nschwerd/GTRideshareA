@@ -48,6 +48,5 @@
     <array name="filterOptions">
         <item>Schedule Match</item>
         <item>Distance</item>
-        <item>Time</item>
     </array>
 </resources>
